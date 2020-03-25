@@ -1,0 +1,14 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Notifications">
+
+
+        <SwitchPreferenceCompat
+            app:key="@string/notificationsPref"
+            app:summaryOff="App cannot send notifications"
+            app:summaryOn="App can send notifications"
+            app:title="Notifications" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

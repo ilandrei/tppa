@@ -4,10 +4,12 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +18,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.CarStore.models.Car;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
@@ -110,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         System.out.println("Reached");
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.logOut:
 
@@ -134,12 +147,25 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Shown");
                 return true;
             case R.id.contact:
-                Intent intent = new Intent();
+                intent = new Intent();
                 intent.setAction(Intent.ACTION_CALL);
                 intent.putExtra(Intent.EXTRA_PHONE_NUMBER,"0760998118");
 
                 intent.setType("text/plain");
                 startActivity(Intent.createChooser(intent,"Choose contact app"));
+
+                return true;
+            case R.id.settings:
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.writeToast:
+                String timeStamp = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+                writeFile(MainActivity.this,"toast",timeStamp);
+                return true;
+            case R.id.readToast:
+                String result = readFile(MainActivity.this,"toast");
+                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
 
                 return true;
             default:
@@ -162,6 +188,38 @@ public class MainActivity extends AppCompatActivity {
 
         return list;
     }
+    public void writeFile(Context mcoContext, String fileName, String sBody){
 
+        try{
+            File newFile = new File(mcoContext.getFilesDir(),fileName);
+            FileWriter writer = new FileWriter(newFile);
+            writer.append(sBody);
+            writer.flush();
+            writer.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String readFile(Context context, String filename) {
+        try {
+            FileInputStream fis = context.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            return "";
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        } catch (IOException e) {
+            return "";
+        }
+    }
 
 }

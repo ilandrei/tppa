@@ -2,4 +2,5 @@
 <resources>
     <item name="logOut" type="id" />
     <item name="btn_sign_cancel" type="id" />
+    <item name="settings_container" type="id" />
 </resources>
