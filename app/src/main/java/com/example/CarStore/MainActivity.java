@@ -166,6 +166,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.readToast:
                 String result = readFile(MainActivity.this,"toast");
                 Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.sensors:
+                intent = new Intent(MainActivity.this, SensorsActivity.class);
+                startActivity(intent);
 
                 return true;
             default:
